@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Cheques</title>
+	</head>
+	<body>
+		<div id="root"></div>
+		<!-- Populated by www/cheques.py at render time. -->
+		<script>
+			window.sanawbar_config = {{ app_config }};
+			// Set before React mounts so the very first paint is already RTL.
+			document.documentElement.lang = window.sanawbar_config.lang;
+			document.documentElement.dir = window.sanawbar_config.direction;
+		</script>
+		<script type="module" src="/src/main.jsx"></script>
+	</body>
+</html>

@@ -1,0 +1,516 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-08-13 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "status",
+  "direction",
+  "column_break_4",
+  "company",
+  "is_post_dated",
+  "cheque_section",
+  "cheque_number",
+  "cheque_date",
+  "cheque_type",
+  "column_break_10",
+  "drawee_bank",
+  "bank_account",
+  "party_section",
+  "party_type",
+  "party",
+  "column_break_15",
+  "party_account",
+  "amount_section",
+  "currency",
+  "amount",
+  "column_break_20",
+  "exchange_rate",
+  "base_amount",
+  "source_section",
+  "source_payment_entry",
+  "allocations",
+  "lifecycle_section",
+  "maturity_journal_entry",
+  "deposit_journal_entry",
+  "deposit_reversal_method",
+  "deposit_reversal_journal_entry",
+  "column_break_30",
+  "clear_payment_entry",
+  "bounce_journal_entry",
+  "bounce_fee_journal_entry",
+  "bounce_section",
+  "bounce_date",
+  "bounce_reason",
+  "column_break_37",
+  "fee_amount",
+  "fee_treatment",
+  "party_fee_share",
+  "company_fee_share",
+  "handover_section",
+  "returned_on",
+  "returned_note",
+  "column_break_45",
+  "replaces",
+  "replaced_by",
+  "dimensions_section",
+  "cost_center",
+  "column_break_50",
+  "project",
+  "control_section",
+  "has_downstream_entries"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "MFG-CHQ-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "bold": 1,
+   "description": "Moved only by the lifecycle actions. There is no Draft: a cheque is born from a submitted Payment Entry.",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Post-Dated Held\nReceived\nIssued\nDeposited\nCleared\nBounced\nReturned to Customer\nReplaced\nCancelled",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "cheque_type.direction",
+   "fieldname": "direction",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Direction",
+   "options": "Inbound\nOutbound",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "description": "The date written on the cheque was in the future when it was booked.",
+   "fieldname": "is_post_dated",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Post-Dated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cheque_section",
+   "fieldtype": "Section Break",
+   "label": "Cheque"
+  },
+  {
+   "description": "The source Payment Entry's Cheque/Reference No.",
+   "fieldname": "cheque_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cheque Number",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "cheque_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Cheque Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "cheque_type",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Cheque Type",
+   "options": "MFG Cheque Type",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "The bank the customer's cheque is drawn on.",
+   "fieldname": "drawee_bank",
+   "fieldtype": "Data",
+   "label": "Drawee Bank",
+   "read_only": 1
+  },
+  {
+   "description": "Our bank account, used by Clear. Editable until the cheque clears.",
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "label": "Bank Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "party_section",
+   "fieldtype": "Section Break",
+   "label": "Party"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Link",
+   "label": "Party Type",
+   "options": "DocType",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Party",
+   "options": "party_type",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "The receivable/payable the capture hit. A bounce re-opens this exact account.",
+   "fieldname": "party_account",
+   "fieldtype": "Link",
+   "label": "Party Account",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_section",
+   "fieldtype": "Section Break",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "options": "currency",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "The rate the cheque is carried at, from the source Payment Entry.",
+   "fieldname": "exchange_rate",
+   "fieldtype": "Float",
+   "label": "Exchange Rate",
+   "precision": "9",
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_amount",
+   "fieldtype": "Currency",
+   "label": "Amount (Company Currency)",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "source_section",
+   "fieldtype": "Section Break",
+   "label": "Source"
+  },
+  {
+   "description": "The submitted Payment Entry that captured this cheque. Unique: exactly one cheque record per capture.",
+   "fieldname": "source_payment_entry",
+   "fieldtype": "Link",
+   "label": "Source Payment Entry",
+   "options": "Payment Entry",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "description": "Mirrors the source Payment Entry's allocation, so a bounce re-opens each invoice by exactly what this cheque paid off it.",
+   "fieldname": "allocations",
+   "fieldtype": "Table",
+   "label": "Allocations",
+   "options": "MFG Cheque Allocation",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "description": "Every entry below was created and submitted through a standard Journal Entry or Payment Entry. This module never writes a GL Entry.",
+   "fieldname": "lifecycle_section",
+   "fieldtype": "Section Break",
+   "label": "Lifecycle Entries"
+  },
+  {
+   "fieldname": "maturity_journal_entry",
+   "fieldtype": "Link",
+   "label": "Maturity Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deposit_journal_entry",
+   "fieldtype": "Link",
+   "label": "Deposit Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "description": "How the deposit was unwound on bounce. A dated reversal is used when the original period is closed or frozen.",
+   "fieldname": "deposit_reversal_method",
+   "fieldtype": "Select",
+   "label": "Deposit Reversal Method",
+   "options": "\nCancellation\nDated Reversal\nAlready Reversed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deposit_reversal_journal_entry",
+   "fieldtype": "Link",
+   "label": "Deposit Reversal Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_30",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "The only entry that touches the real bank.",
+   "fieldname": "clear_payment_entry",
+   "fieldtype": "Link",
+   "label": "Clear Payment Entry",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bounce_journal_entry",
+   "fieldtype": "Link",
+   "label": "Bounce Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bounce_fee_journal_entry",
+   "fieldtype": "Link",
+   "label": "Bounce Fee Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "bounce_journal_entry",
+   "fieldname": "bounce_section",
+   "fieldtype": "Section Break",
+   "label": "Bounce"
+  },
+  {
+   "fieldname": "bounce_date",
+   "fieldtype": "Date",
+   "label": "Bounce Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bounce_reason",
+   "fieldtype": "Small Text",
+   "label": "Bounce Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_37",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fee_amount",
+   "fieldtype": "Currency",
+   "label": "Bank Fee",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fee_treatment",
+   "fieldtype": "Select",
+   "label": "Fee Treatment",
+   "options": "\nCompany Expense\nRecharge to Party\nSplit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "party_fee_share",
+   "fieldtype": "Currency",
+   "label": "Fee Recharged to Party",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company_fee_share",
+   "fieldtype": "Currency",
+   "label": "Fee Absorbed by Company",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "handover_section",
+   "fieldtype": "Section Break",
+   "label": "Handover and Replacement"
+  },
+  {
+   "description": "When the physical cheque went back to the customer. No accounting: the bounce already restored the receivable.",
+   "fieldname": "returned_on",
+   "fieldtype": "Date",
+   "label": "Returned On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "returned_note",
+   "fieldtype": "Small Text",
+   "label": "Handover Note",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_45",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "replaces",
+   "fieldtype": "Link",
+   "label": "Replaces",
+   "options": "MFG Cheque",
+   "read_only": 1
+  },
+  {
+   "fieldname": "replaced_by",
+   "fieldtype": "Link",
+   "label": "Replaced By",
+   "options": "MFG Cheque",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "description": "Carried onto every Journal Entry and Payment Entry this cheque generates.",
+   "fieldname": "dimensions_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting Dimensions"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "column_break_50",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Control"
+  },
+  {
+   "description": "Set the moment this cheque has lifecycle entries of its own. Locks the money fields and blocks cancelling the source Payment Entry.",
+   "fieldname": "has_downstream_entries",
+   "fieldtype": "Check",
+   "label": "Has Downstream Entries",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Journal Entry",
+   "link_fieldname": "custom_mfg_cheque"
+  },
+  {
+   "link_doctype": "Payment Entry",
+   "link_fieldname": "custom_mfg_cheque"
+  }
+ ],
+ "modified": "2026-08-13 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Cheque Management",
+ "name": "MFG Cheque",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Cheque Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User"
+  }
+ ],
+ "search_fields": "cheque_number,party,amount,status",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "cheque_number",
+ "track_changes": 1
+}

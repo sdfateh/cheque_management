@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "creation": "2026-08-13 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "default_bank_account",
+  "bank_charges_account",
+  "column_break_4",
+  "exchange_gain_loss_account",
+  "cost_center",
+  "default_inbound_type",
+  "default_outbound_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "description": "Used by Clear when the cheque and its type name none.",
+   "fieldname": "default_bank_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Bank Account",
+   "options": "Account"
+  },
+  {
+   "description": "Where a bounce fee absorbed by the company is booked. No fallback exists on Company, so a fee without this set throws.",
+   "fieldname": "bank_charges_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bank Charges Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Falls back to Company.exchange_gain_loss_account when empty.",
+   "fieldname": "exchange_gain_loss_account",
+   "fieldtype": "Link",
+   "label": "Exchange Gain/Loss Account",
+   "options": "Account"
+  },
+  {
+   "description": "Falls back to Company.cost_center when empty.",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "default_inbound_type",
+   "fieldtype": "Link",
+   "label": "Default Inbound Cheque Type",
+   "options": "MFG Cheque Type"
+  },
+  {
+   "fieldname": "default_outbound_type",
+   "fieldtype": "Link",
+   "label": "Default Outbound Cheque Type",
+   "options": "MFG Cheque Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-08-13 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Cheque Management",
+ "name": "MFG Cheque Company Setting",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

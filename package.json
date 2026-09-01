@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "frontend-install": "cd frontend && yarn install --check-files",
+    "frontend-build": "cd frontend && yarn build",
+    "postinstall": "yarn frontend-install",
+    "build": "yarn frontend-build"
+  }
+}

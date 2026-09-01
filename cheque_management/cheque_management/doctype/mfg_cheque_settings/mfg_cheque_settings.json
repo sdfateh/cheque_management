@@ -1,0 +1,80 @@
+{
+ "actions": [],
+ "creation": "2026-08-13 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "auto_mature_post_dated",
+  "default_fee_treatment",
+  "company_section",
+  "company_settings"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "description": "When off, a matured post-dated cheque waits for someone to press Mature instead of being moved by the daily job.",
+   "fieldname": "auto_mature_post_dated",
+   "fieldtype": "Check",
+   "label": "Automatically Mature Post-Dated Cheques"
+  },
+  {
+   "default": "Company Expense",
+   "description": "Preselected in the bounce dialog. Every bounce can still choose.",
+   "fieldname": "default_fee_treatment",
+   "fieldtype": "Select",
+   "label": "Default Bounce Fee Treatment",
+   "options": "Company Expense\nRecharge to Party\nSplit"
+  },
+  {
+   "fieldname": "company_section",
+   "fieldtype": "Section Break",
+   "label": "Per Company"
+  },
+  {
+   "description": "Accounts are company-scoped in ERPNext, so every company that handles cheques needs its own row.",
+   "fieldname": "company_settings",
+   "fieldtype": "Table",
+   "label": "Company Settings",
+   "options": "MFG Cheque Company Setting"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-13 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Cheque Management",
+ "name": "MFG Cheque Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Cheque Manager"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

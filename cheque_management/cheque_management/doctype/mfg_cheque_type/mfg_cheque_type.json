@@ -1,0 +1,166 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:cheque_type_name",
+ "creation": "2026-08-13 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cheque_type_name",
+  "company",
+  "direction",
+  "column_break_4",
+  "enabled",
+  "currency",
+  "accounts_section",
+  "clearing_account",
+  "transit_account",
+  "column_break_9",
+  "post_dated_account",
+  "default_bank_account"
+ ],
+ "fields": [
+  {
+   "description": "Name it with the company abbreviation, e.g. \"Inbound Regular - DD\": the same conceptual type exists once per company.",
+   "fieldname": "cheque_type_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cheque Type Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "direction",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Direction",
+   "options": "Inbound\nOutbound",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "description": "Derived from the accounts. A cheque's face value is carried in its clearing account, so all three accounts must share one currency.",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Clearing Accounts"
+  },
+  {
+   "description": "Inbound: Cheques in Hand. Outbound: Cheques Payable. Must NOT have Account Type = Bank or Cash.",
+   "fieldname": "clearing_account",
+   "fieldtype": "Link",
+   "label": "Clearing Account",
+   "link_filters": "[[\"Account\",\"is_group\",\"=\",0],[\"Account\",\"company\",\"=\",\"eval:doc.company\"]]",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.direction == 'Inbound'",
+   "description": "Cheques Under Collection: deposited with the bank, not yet cleared. Inbound only.",
+   "fieldname": "transit_account",
+   "fieldtype": "Link",
+   "label": "Under Collection Account",
+   "link_filters": "[[\"Account\",\"is_group\",\"=\",0],[\"Account\",\"company\",\"=\",\"eval:doc.company\"]]",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Where a cheque dated in the future is held until it matures.",
+   "fieldname": "post_dated_account",
+   "fieldtype": "Link",
+   "label": "Post-Dated Account",
+   "link_filters": "[[\"Account\",\"is_group\",\"=\",0],[\"Account\",\"company\",\"=\",\"eval:doc.company\"]]",
+   "options": "Account"
+  },
+  {
+   "description": "Convenience default for the Clear action. The real bank is only touched on Clear.",
+   "fieldname": "default_bank_account",
+   "fieldtype": "Link",
+   "label": "Default Bank Account",
+   "link_filters": "[[\"Account\",\"is_group\",\"=\",0],[\"Account\",\"company\",\"=\",\"eval:doc.company\"]]",
+   "options": "Account"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-13 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Cheque Management",
+ "name": "MFG Cheque Type",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Cheque Manager"
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
