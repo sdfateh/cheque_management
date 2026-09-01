@@ -10,6 +10,7 @@ The fixtures build their own company so the tests never depend on a site's chart
 of accounts, and so the clearing accounts are guaranteed to be ordinary ledgers.
 """
 
+import json
 from unittest.mock import patch
 
 import frappe
@@ -714,6 +715,23 @@ class TestChequeOperations(FrappeTestCase):
 			with patch("cheque_management.cfo_dashboard._get_cheques", return_value=[]):
 				cfo_dashboard.get_alerts({"company": COMPANY})
 			only_for.assert_called_once_with(cfo_dashboard.MANAGEMENT_ROLES)
+
+	def test_cfo_workspace_has_routable_title(self):
+		workspace = frappe.get_doc("Workspace", "CFO Cheque Management")
+		self.assertEqual(workspace.title, workspace.name)
+		self.assertTrue(frappe.db.exists("Dashboard", "CFO Cheque Management Dashboard"))
+
+		content = json.loads(workspace.content)
+		block_references = (
+			("chart", "chart_name", workspace.charts),
+			("number_card", "number_card_name", workspace.number_cards),
+			("shortcut", "shortcut_name", workspace.shortcuts),
+		)
+		for block_type, fieldname, rows in block_references:
+			referenced_labels = {
+				block["data"][fieldname] for block in content if block["type"] == block_type
+			}
+			self.assertSetEqual(referenced_labels, {row.label for row in rows})
 
 	def test_reconciliation_matches_open_cheque_to_configured_gl(self):
 		party = self.scoped_party("Report Reconciliation")
