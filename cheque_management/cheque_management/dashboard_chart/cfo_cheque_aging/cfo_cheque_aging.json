@@ -1,0 +1,14 @@
+{
+ "chart_name": "CFO Cheque Aging",
+ "chart_type": "Custom",
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{\"company\":\"frappe.defaults.get_user_default(\\\"Company\\\")\"}",
+ "filters_json": "{\"metric\":\"aging\"}",
+ "is_public": 1,
+ "is_standard": 1,
+ "module": "Cheque Management",
+ "name": "CFO Cheque Aging",
+ "source": "CFO Cheque Metrics",
+ "type": "Bar",
+ "roles": [{"role": "Accounts Manager"}, {"role": "Cheque Manager"}, {"role": "System Manager"}]
+}

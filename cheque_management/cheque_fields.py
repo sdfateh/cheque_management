@@ -103,6 +103,15 @@ CUSTOM_FIELDS = {
 			"description": "Set by the Replace action on a bounced cheque.",
 		},
 		{
+			"fieldname": "custom_mfg_cancellation_reason",
+			"fieldtype": "Small Text",
+			"label": "Cheque Cancellation Reason",
+			"insert_after": "custom_mfg_replaces",
+			"allow_on_submit": 1,
+			"depends_on": "custom_mfg_cheque_type",
+			"description": "Optional audit reason copied to MFG Cheque if this Payment Entry is cancelled.",
+		},
+		{
 			"fieldname": "custom_mfg_cheque",
 			"fieldtype": "Link",
 			"options": "MFG Cheque",

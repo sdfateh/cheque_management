@@ -5,6 +5,8 @@ app_description = "Cheque lifecycle management for ERPNext"
 app_email = "salahaldinfateh@gmail.com"
 app_license = "mit"
 
+app_include_js = ["/assets/cheque_management/js/cheque_reports.js"]
+
 required_apps = ["erpnext", "sanawbar"]
 
 add_to_apps_screen = [
@@ -35,6 +37,7 @@ fixtures = [
 					"Payment Entry-custom_mfg_cheque_col_break",
 					"Payment Entry-custom_mfg_bank_account",
 					"Payment Entry-custom_mfg_replaces",
+					"Payment Entry-custom_mfg_cancellation_reason",
 					"Payment Entry-custom_mfg_cheque",
 					"Journal Entry-custom_mfg_cheque",
 				],

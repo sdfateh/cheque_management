@@ -1,0 +1,42 @@
+{
+ "cards": [
+  {"card":"CFO Total Received Cheques"},
+  {"card":"CFO Total Inbound PDC"},
+  {"card":"CFO Total Deposited"},
+  {"card":"CFO Total Inbound Cleared"},
+  {"card":"CFO Total Inbound Bounced"},
+  {"card":"CFO Total Issued"},
+  {"card":"CFO Total Outbound PDC"},
+  {"card":"CFO Total Outbound Cleared"},
+  {"card":"CFO Total Outbound Bounced"},
+  {"card":"CFO Overdue Cheques"},
+  {"card":"CFO Cheques Due Next 7 Days"},
+  {"card":"CFO Cheques Due Next 30 Days"},
+  {"card":"CFO Bounced Cheques"},
+  {"card":"CFO Large-Value Cheques"},
+  {"card":"CFO Expected Inflow"},
+  {"card":"CFO Expected Outflow"},
+  {"card":"CFO Net Expected Cash Flow"},
+  {"card":"CFO Total Cheque Exposure"},
+  {"card":"CFO GL Reconciliation Difference"},
+  {"card":"CFO Accounting Exceptions"}
+ ],
+ "charts": [
+  {"chart":"CFO Cheque Inbound vs Outbound","width":"Half"},
+  {"chart":"CFO Cheque Status Distribution","width":"Half"},
+  {"chart":"CFO Cheque Cash Flow Forecast","width":"Full"},
+  {"chart":"CFO Cheque Maturity","width":"Half"},
+  {"chart":"CFO Cheque Bounced Trend","width":"Half"},
+  {"chart":"CFO Cheque Top Customers","width":"Half"},
+  {"chart":"CFO Cheque Top Suppliers","width":"Half"},
+  {"chart":"CFO Cheques by Bank","width":"Half"},
+  {"chart":"CFO Cheque Aging","width":"Half"},
+  {"chart":"CFO Cheque Accounting Exceptions","width":"Full"}
+ ],
+ "dashboard_name":"CFO Cheque Management Dashboard",
+ "doctype":"Dashboard",
+ "is_default":0,
+ "is_standard":1,
+ "module":"Cheque Management",
+ "name":"CFO Cheque Management Dashboard"
+}

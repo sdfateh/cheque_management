@@ -1,0 +1,7 @@
+{
+ "doctype": "Dashboard Chart Source",
+ "module": "Cheque Management",
+ "name": "CFO Cheque Metrics",
+ "source_name": "CFO Cheque Metrics",
+ "timeseries": 0
+}

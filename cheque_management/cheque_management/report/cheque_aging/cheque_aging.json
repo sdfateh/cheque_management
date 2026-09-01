@@ -1,0 +1,12 @@
+{
+ "add_total_row": 1,
+ "disabled": 0,
+ "doctype": "Report",
+ "is_standard": "Yes",
+ "module": "Cheque Management",
+ "name": "Cheque Aging",
+ "ref_doctype": "MFG Cheque",
+ "report_name": "Cheque Aging",
+ "report_type": "Script Report",
+ "roles": [{"role": "Accounts Manager"}, {"role": "Cheque Manager"}, {"role": "System Manager"}]
+}

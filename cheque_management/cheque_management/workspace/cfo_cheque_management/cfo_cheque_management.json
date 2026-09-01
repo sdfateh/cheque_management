@@ -1,0 +1,58 @@
+{
+ "app": "cheque_management",
+ "charts": [
+  {"chart_name":"CFO Cheque Cash Flow Forecast","label":"Cash Flow Forecast"},
+  {"chart_name":"CFO Cheque Maturity","label":"Cheque Maturity"},
+  {"chart_name":"CFO Cheque Top Customers","label":"Top Customers by Exposure"},
+  {"chart_name":"CFO Cheque Accounting Exceptions","label":"Accounting Exceptions"}
+ ],
+ "content": "[{\"id\":\"cfo_head\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>CFO Cheque Management</b></span>\",\"col\":12}},{\"id\":\"cfo_dash\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"CFO Cheque Management Dashboard\",\"col\":4}},{\"id\":\"cfo_register\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cheque Register\",\"col\":4}},{\"id\":\"cfo_recon\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cheque Accounting Reconciliation\",\"col\":4}},{\"id\":\"cfo_spacer1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cfo_liquidity\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Liquidity and Exposure</b></span>\",\"col\":12}},{\"id\":\"cfo_inflow\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Expected Inflow\",\"col\":3}},{\"id\":\"cfo_outflow\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Expected Outflow\",\"col\":3}},{\"id\":\"cfo_net\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Net Expected Cash Flow\",\"col\":3}},{\"id\":\"cfo_exposure\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Total Cheque Exposure\",\"col\":3}},{\"id\":\"cfo_risk\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Risk and Control</b></span>\",\"col\":12}},{\"id\":\"cfo_overdue\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Overdue Cheques\",\"col\":3}},{\"id\":\"cfo_bounced\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Bounced Cheques\",\"col\":3}},{\"id\":\"cfo_diff\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO GL Reconciliation Difference\",\"col\":3}},{\"id\":\"cfo_except\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"CFO Accounting Exceptions\",\"col\":3}},{\"id\":\"cfo_chart_flow\",\"type\":\"chart\",\"data\":{\"chart_name\":\"CFO Cheque Cash Flow Forecast\",\"col\":12}},{\"id\":\"cfo_chart_maturity\",\"type\":\"chart\",\"data\":{\"chart_name\":\"CFO Cheque Maturity\",\"col\":6}},{\"id\":\"cfo_chart_customer\",\"type\":\"chart\",\"data\":{\"chart_name\":\"CFO Cheque Top Customers\",\"col\":6}},{\"id\":\"cfo_chart_exception\",\"type\":\"chart\",\"data\":{\"chart_name\":\"CFO Cheque Accounting Exceptions\",\"col\":12}},{\"id\":\"cfo_reports_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Management Reports</b></span>\",\"col\":12}},{\"id\":\"cfo_reports_card\",\"type\":\"card\",\"data\":{\"card_name\":\"Cheque Reports\",\"col\":6}}]",
+ "custom_blocks": [],
+ "doctype": "Workspace",
+ "hide_custom": 0,
+ "icon": "accounting",
+ "is_hidden": 0,
+ "label": "CFO Cheque Management",
+ "links": [
+  {"hidden":0,"label":"Cheque Reports","link_count":18,"onboard":0,"type":"Card Break"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Register","link_count":0,"link_to":"Cheque Register","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Received Cheques","link_count":0,"link_to":"Received Cheques","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Deposited Pending Clearance","link_count":0,"link_to":"Deposited Pending Clearance","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Bounced Cheques","link_count":0,"link_to":"Bounced Cheques","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Customer Cheque Report","link_count":0,"link_to":"Customer Cheque Report","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Supplier Cheque Report","link_count":0,"link_to":"Supplier Cheque Report","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheques Due Maturity","link_count":0,"link_to":"Cheques Due Maturity","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Position","link_count":0,"link_to":"Cheque Position","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Aging","link_count":0,"link_to":"Cheque Aging","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Cash Flow Forecast","link_count":0,"link_to":"Cheque Cash Flow Forecast","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheques by Bank","link_count":0,"link_to":"Cheques by Bank","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Bounced Cheque Analysis","link_count":0,"link_to":"Bounced Cheque Analysis","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Customer Cheque Exposure","link_count":0,"link_to":"Customer Cheque Exposure","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Supplier Cheque Exposure","link_count":0,"link_to":"Supplier Cheque Exposure","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Bank Reconciliation Cheque View","link_count":0,"link_to":"Bank Reconciliation Cheque View","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Accounting Reconciliation","link_count":0,"link_to":"Cheque Accounting Reconciliation","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cheque Audit Trail","link_count":0,"link_to":"Cheque Audit Trail","link_type":"Report","onboard":0,"type":"Link"},
+  {"hidden":0,"is_query_report":1,"label":"Cancelled Cheques","link_count":0,"link_to":"Cancelled Cheques","link_type":"Report","onboard":0,"type":"Link"}
+ ],
+ "module": "Cheque Management",
+ "name": "CFO Cheque Management",
+ "number_cards": [
+  {"label":"Expected Inflow","number_card_name":"CFO Expected Inflow"},
+  {"label":"Expected Outflow","number_card_name":"CFO Expected Outflow"},
+  {"label":"Net Expected Cash Flow","number_card_name":"CFO Net Expected Cash Flow"},
+  {"label":"Total Cheque Exposure","number_card_name":"CFO Total Cheque Exposure"},
+  {"label":"Overdue Cheques","number_card_name":"CFO Overdue Cheques"},
+  {"label":"Bounced Cheques","number_card_name":"CFO Bounced Cheques"},
+  {"label":"GL Reconciliation Difference","number_card_name":"CFO GL Reconciliation Difference"},
+  {"label":"Accounting Exceptions","number_card_name":"CFO Accounting Exceptions"}
+ ],
+ "parent_page": "",
+ "public": 1,
+ "roles": [{"role":"Accounts Manager"},{"role":"Cheque Manager"},{"role":"System Manager"}],
+ "sequence_id": 25.0,
+ "shortcuts": [
+  {"color":"Blue","label":"CFO Cheque Management Dashboard","link_to":"CFO Cheque Management Dashboard","type":"Dashboard"},
+  {"color":"Grey","label":"Cheque Register","link_to":"Cheque Register","type":"Report"},
+  {"color":"Red","label":"Cheque Accounting Reconciliation","link_to":"Cheque Accounting Reconciliation","type":"Report"}
+ ]
+}
