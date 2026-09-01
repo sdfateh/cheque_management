@@ -15,7 +15,7 @@ Split across three events on purpose.
 """
 
 import frappe
-from frappe.utils import add_days, flt, getdate
+from frappe.utils import add_days, flt, getdate, now_datetime
 
 from cheque_management.i18n import _
 
@@ -261,7 +261,15 @@ def on_cancel(doc, method=None):
 			).format(doc.name, name)
 		)
 	cheque = frappe.get_doc(CHEQUE, name)
-	cheque.status = "Cancelled"
+	cheque.update(
+		{
+			"cancelled_from_status": cheque.status,
+			"cancellation_date": now_datetime(),
+			"cancelled_by": frappe.session.user,
+			"cancellation_reason": doc.get("custom_mfg_cancellation_reason") or doc.get("remarks"),
+			"status": "Cancelled",
+		}
+	)
 	# The Payment Entry cancellation authorizes its derived tracker update.
 	cheque.save(ignore_permissions=True)
 

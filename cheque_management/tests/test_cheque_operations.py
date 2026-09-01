@@ -16,6 +16,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, flt, nowdate
 
+from cheque_management import cfo_dashboard, reporting
 from cheque_management import cheque_operations as ops
 
 CHEQUE_DT = "MFG Cheque"
@@ -668,3 +669,104 @@ class TestChequeOperations(FrappeTestCase):
 		self.assertEqual(ops.allowed_actions("Deposited", "Inbound"), ["clear", "bounce"])
 		self.assertEqual(ops.allowed_actions("Cleared", "Inbound"), [])
 		self.assertEqual(ops.allowed_actions("Issued", "Outbound"), ["clear", "bounce"])
+
+	# ---------------------------------------------------------- CFO reporting
+
+	def test_register_and_position_use_company_currency_amounts(self):
+		party = self.scoped_party("Report Position")
+		self.capture("T-REPORT-POS", amount=125.0, party=party)
+		filters = {"company": COMPANY, "customer": party}
+
+		_columns, register, _message, _chart, summary = reporting.execute_report(
+			"Cheque Register", filters
+		)
+		self.assertEqual(len(register), 1)
+		self.assertEqual(register[0].base_amount, 125.0)
+		self.assertEqual(summary[1]["value"], 125.0)
+
+		_columns, position, _message, _chart, summary = reporting.execute_report(
+			"Cheque Position", filters
+		)
+		received = next(row for row in position if row.status == "Received")
+		self.assertEqual(received.amount, 125.0)
+		self.assertEqual(summary[0]["value"], 125.0)
+
+	def test_cash_flow_kpi_matches_forecast_report(self):
+		party = self.scoped_party("Report Forecast")
+		self.capture("T-REPORT-FLOW", cheque_date=add_days(nowdate(), 5), amount=210.0, party=party)
+		filters = {"company": COMPANY, "customer": party, "forecast_days": 7}
+
+		_columns, data, _message, _chart, summary = reporting.execute_report(
+			"Cheque Cash Flow Forecast", filters
+		)
+		self.assertEqual(sum(row.expected_inflow for row in data), 210.0)
+		self.assertEqual(summary[0]["value"], 210.0)
+		card = cfo_dashboard.get_number_card({**filters, "metric": "expected_inflow"})
+		self.assertEqual(card["value"], summary[0]["value"])
+		self.assertEqual(card["route"], ["query-report", "Cheque Cash Flow Forecast"])
+
+	def test_cfo_endpoints_enforce_management_roles(self):
+		with patch("frappe.only_for") as only_for:
+			cfo_dashboard.get_number_card({"metric": "total_exposure", "company": COMPANY})
+			only_for.assert_called_once_with(cfo_dashboard.MANAGEMENT_ROLES)
+
+		with patch("frappe.only_for") as only_for:
+			with patch("cheque_management.cfo_dashboard._get_cheques", return_value=[]):
+				cfo_dashboard.get_alerts({"company": COMPANY})
+			only_for.assert_called_once_with(cfo_dashboard.MANAGEMENT_ROLES)
+
+	def test_reconciliation_matches_open_cheque_to_configured_gl(self):
+		party = self.scoped_party("Report Reconciliation")
+		self.capture("T-REPORT-RECON", amount=175.0, party=party)
+		_columns, data, _message, _chart, _summary = reporting.execute_report(
+			"Cheque Accounting Reconciliation", {"company": COMPANY, "to_date": nowdate()}
+		)
+		in_hand = next(row for row in data if row.account == self.in_hand)
+		self.assertEqual(in_hand.gl_balance, in_hand.cheque_management_balance)
+		self.assertEqual(in_hand.status, "Reconciled")
+
+	def test_bounced_analysis_and_alerts_use_historical_bounce_marker(self):
+		party = self.scoped_party("Report Bounce")
+		_pe, cheque = self.capture("T-REPORT-BOUNCE", amount=95.0, party=party)
+		ops.deposit(cheque)
+		ops.bounce(cheque, reason="Reporting test")
+		filters = {"company": COMPANY, "customer": party, "group_by": "Customer"}
+
+		_columns, data, _message, _chart, summary = reporting.execute_report(
+			"Bounced Cheque Analysis", filters
+		)
+		self.assertEqual(data[0].cheque_count, 1)
+		self.assertEqual(data[0].bounced_amount, 95.0)
+		self.assertEqual(summary[0]["value"], 1)
+		alerts = cfo_dashboard.get_alerts(filters)
+		self.assertTrue(any(alert["key"] == "bounced" for alert in alerts))
+
+	def test_all_report_entrypoints_execute(self):
+		party = self.scoped_party("Report Smoke")
+		self.capture("T-REPORT-SMOKE", amount=80.0, party=party)
+		filters = {"company": COMPANY, "customer": party, "to_date": nowdate()}
+		reports = (
+			"Cheque Register",
+			"Received Cheques",
+			"Deposited Pending Clearance",
+			"Bounced Cheques",
+			"Customer Cheque Report",
+			"Supplier Cheque Report",
+			"Cheques Due Maturity",
+			"Cheque Position",
+			"Cheque Aging",
+			"Cheque Cash Flow Forecast",
+			"Cheques by Bank",
+			"Bounced Cheque Analysis",
+			"Customer Cheque Exposure",
+			"Supplier Cheque Exposure",
+			"Bank Reconciliation Cheque View",
+			"Cheque Accounting Reconciliation",
+			"Cheque Audit Trail",
+			"Cancelled Cheques",
+		)
+		for report in reports:
+			with self.subTest(report=report):
+				columns, rows, _message, _chart, _summary = reporting.execute_report(report, filters)
+				self.assertTrue(columns)
+				self.assertIsInstance(rows, list)

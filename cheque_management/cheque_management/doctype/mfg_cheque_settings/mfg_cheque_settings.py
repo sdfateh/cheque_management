@@ -41,6 +41,17 @@ class MFGChequeSettings(Document):
 						row.idx, _(row.meta.get_label(fieldname)), row.company
 					)
 				)
+		for fieldname in (
+			"large_value_threshold",
+			"deposited_clearance_days",
+			"repeated_bounce_count",
+			"reconciliation_tolerance",
+			"dashboard_cache_minutes",
+		):
+			if row.get(fieldname) is not None and row.get(fieldname) < 0:
+				frappe.throw(
+					_("Row {0}: {1} cannot be negative.").format(row.idx, _(row.meta.get_label(fieldname)))
+				)
 
 
 def get_settings():
@@ -63,9 +74,12 @@ def get_company_settings(company):
 	doc = frappe.get_cached_doc("MFG Cheque Settings")
 	row = next((r for r in doc.company_settings if r.company == company), None)
 
-	company_defaults = frappe.get_cached_value(
-		"Company", company, ["exchange_gain_loss_account", "cost_center"], as_dict=True
-	) or frappe._dict()
+	company_defaults = (
+		frappe.get_cached_value(
+			"Company", company, ["exchange_gain_loss_account", "cost_center"], as_dict=True
+		)
+		or frappe._dict()
+	)
 
 	return frappe._dict(
 		default_bank_account=(row.default_bank_account if row else None),
@@ -75,5 +89,11 @@ def get_company_settings(company):
 		cost_center=(row.cost_center if row else None) or company_defaults.get("cost_center"),
 		default_inbound_type=(row.default_inbound_type if row else None),
 		default_outbound_type=(row.default_outbound_type if row else None),
+		large_value_threshold=(row.large_value_threshold if row else 0) or 0,
+		deposited_clearance_days=(row.deposited_clearance_days if row else 10) or 10,
+		repeated_bounce_count=(row.repeated_bounce_count if row else 2) or 2,
+		reconciliation_tolerance=(row.reconciliation_tolerance if row else 0) or 0,
+		default_forecast_days=(row.default_forecast_days if row else "30") or "30",
+		dashboard_cache_minutes=(row.dashboard_cache_minutes if row else 15),
 		default_fee_treatment=get_settings().default_fee_treatment,
 	)

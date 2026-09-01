@@ -12,7 +12,15 @@
   "exchange_gain_loss_account",
   "cost_center",
   "default_inbound_type",
-  "default_outbound_type"
+  "default_outbound_type",
+  "reporting_section",
+  "large_value_threshold",
+  "deposited_clearance_days",
+  "repeated_bounce_count",
+  "column_break_reporting",
+  "reconciliation_tolerance",
+  "default_forecast_days",
+  "dashboard_cache_minutes"
  ],
  "fields": [
   {
@@ -68,6 +76,57 @@
    "fieldtype": "Link",
    "label": "Default Outbound Cheque Type",
    "options": "MFG Cheque Type"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "reporting_section",
+   "fieldtype": "Section Break",
+   "label": "CFO Reporting Thresholds"
+  },
+  {
+   "default": "0",
+   "description": "Cheques at or above this company-currency amount trigger a large-value alert. Zero disables the alert.",
+   "fieldname": "large_value_threshold",
+   "fieldtype": "Currency",
+   "label": "Large-Value Cheque Threshold",
+   "options": "Company:company:default_currency"
+  },
+  {
+   "default": "10",
+   "fieldname": "deposited_clearance_days",
+   "fieldtype": "Int",
+   "label": "Pending Clearance Alert (Days)"
+  },
+  {
+   "default": "2",
+   "fieldname": "repeated_bounce_count",
+   "fieldtype": "Int",
+   "label": "Repeated Bounce Threshold"
+  },
+  {
+   "fieldname": "column_break_reporting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "reconciliation_tolerance",
+   "fieldtype": "Currency",
+   "label": "Reconciliation Tolerance",
+   "options": "Company:company:default_currency"
+  },
+  {
+   "default": "30",
+   "fieldname": "default_forecast_days",
+   "fieldtype": "Select",
+   "label": "Default Forecast Period",
+   "options": "7\n30\n60\n90\n180"
+  },
+  {
+   "default": "15",
+   "description": "Dashboard cache lifetime. Zero disables caching.",
+   "fieldname": "dashboard_cache_minutes",
+   "fieldtype": "Int",
+   "label": "Dashboard Cache (Minutes)"
   }
  ],
  "index_web_pages_for_search": 1,

@@ -1,0 +1,14 @@
+{
+ "chart_name": "CFO Cheque Bounced Trend",
+ "chart_type": "Custom",
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{\"company\":\"frappe.defaults.get_user_default(\\\"Company\\\")\"}",
+ "filters_json": "{\"metric\":\"bounced_trend\"}",
+ "is_public": 1,
+ "is_standard": 1,
+ "module": "Cheque Management",
+ "name": "CFO Cheque Bounced Trend",
+ "source": "CFO Cheque Metrics",
+ "type": "Line",
+ "roles": [{"role": "Accounts Manager"}, {"role": "Cheque Manager"}, {"role": "System Manager"}]
+}

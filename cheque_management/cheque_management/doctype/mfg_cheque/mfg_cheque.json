@@ -53,6 +53,12 @@
   "handover_section",
   "returned_on",
   "returned_note",
+  "cancellation_section",
+  "cancelled_from_status",
+  "cancellation_date",
+  "column_break_cancellation",
+  "cancelled_by",
+  "cancellation_reason",
   "column_break_45",
   "replaces",
   "replaced_by",
@@ -392,6 +398,42 @@
    "fieldname": "returned_note",
    "fieldtype": "Small Text",
    "label": "Handover Note",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.status == 'Cancelled'",
+   "fieldname": "cancellation_section",
+   "fieldtype": "Section Break",
+   "label": "Cancellation Audit"
+  },
+  {
+   "fieldname": "cancelled_from_status",
+   "fieldtype": "Data",
+   "label": "Cancelled From Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cancellation_date",
+   "fieldtype": "Datetime",
+   "label": "Cancellation Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cancellation",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cancelled_by",
+   "fieldtype": "Link",
+   "label": "Cancelled By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "fieldtype": "Small Text",
+   "label": "Cancellation Reason",
    "read_only": 1
   },
   {
