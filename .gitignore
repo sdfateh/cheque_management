@@ -18,3 +18,6 @@ cheque_management/public/cheques/assets/
 .idea/
 .vscode/
 *.swp
+
+# Created by Frappe's aggregate asset linker when the app has root dependencies.
+cheque_management/public/node_modules

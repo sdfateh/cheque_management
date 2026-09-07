@@ -3,6 +3,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
+import SentryTestPage from "@sanawbar/core/components/SentryTestPage";
+import { initSentry } from "@sanawbar/core/lib/sentry";
+
 import App from "./App";
 import { __ } from "./lib/i18n";
 import { initTheme } from "./lib/theme";
@@ -19,7 +22,10 @@ import "./index.css";
 // needs me today", the list is "find me this cheque". Filters live in the list's
 // URL, so every tile and shortcut on the dashboard is just a link into it.
 
+initSentry();
 initTheme();
+
+const canTestSentry = window.sanawbar_config?.can_test_sentry === true;
 
 const router = createBrowserRouter(
 	[
@@ -38,6 +44,9 @@ const router = createBrowserRouter(
 			children: [
 				{ index: true, element: <ChequeDashboard /> },
 				{ path: "list", element: <Cheques /> },
+				...(canTestSentry
+					? [{ path: "sentry-test", element: <SentryTestPage product="Cheques" translate={__} /> }]
+					: []),
 				{ path: "*", element: <Navigate to="/" replace /> },
 			],
 		},

@@ -14,6 +14,7 @@ What the two pages share is presentation infrastructure, not bundles or policy.
 """
 
 import frappe
+from sanawbar.spa import require_sentry_test_access
 
 from cheque_management.i18n import _
 from cheque_management.spa import build_config, script_safe_json
@@ -24,12 +25,13 @@ no_cache = 1
 def get_context(context):
 	if frappe.session.user == "Guest":
 		frappe.throw(_("Please log in to manage cheques."), frappe.PermissionError)
+	sentry_test = require_sentry_test_access("cheques")
 
 	# Read on the cheque record is the entry ticket; write decides whether the
 	# lifecycle buttons render. Every endpoint re-checks for itself, so this gate
 	# only avoids showing someone a screen that would reject them.
 	can_read = bool(frappe.has_permission("MFG Cheque", "read"))
-	if not can_read:
+	if not (can_read or sentry_test):
 		frappe.throw(
 			_("You do not have permission to manage cheques."),
 			frappe.PermissionError,
@@ -38,6 +40,7 @@ def get_context(context):
 	config = build_config(
 		can_manage_cheques=can_read,
 		can_write_cheques=bool(frappe.has_permission("MFG Cheque", "write")),
+		can_test_sentry=sentry_test,
 	)
 
 	context.update(
