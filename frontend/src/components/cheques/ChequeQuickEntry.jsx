@@ -69,6 +69,9 @@ export default function ChequeQuickEntry({ open, onClose, onCreated }) {
 					posting_date: m.today,
 					bank_account: m.default_bank_account,
 				};
+				for (const dimension of m.dimensions || []) {
+					if (dimension.default) initial[dimension.fieldname] = dimension.default;
+				}
 				setForm(initial);
 				markSaved({ form: initial, picked: [] });
 			})
@@ -228,6 +231,28 @@ export default function ChequeQuickEntry({ open, onClose, onCreated }) {
 									</Field>
 								)}
 							</div>
+
+							{meta.dimensions?.length > 0 && (
+								<div className="rounded-lg border border-border p-3">
+									<p className="mb-3 text-xs font-medium text-content-muted">
+										{__("Accounting Dimensions")}
+									</p>
+									<div className="grid gap-3 sm:grid-cols-2">
+										{meta.dimensions.map((dimension) => (
+											<Field key={dimension.fieldname} label={__(dimension.label)}>
+												<LinkField
+													doctype={dimension.options}
+													filters={dimension.filters}
+													className={inputCls}
+													value={form[dimension.fieldname] || ""}
+													placeholder={__("Search {0}…", [__(dimension.label)])}
+													onChange={(v) => set({ [dimension.fieldname]: v })}
+												/>
+											</Field>
+										))}
+									</div>
+								</div>
+							)}
 
 							{invoices.length > 0 && (
 								<div className="rounded-lg border border-border">

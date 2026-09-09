@@ -13,7 +13,7 @@ does not exist yet and `migrate` would fail on a fresh site.
 """
 
 import frappe
-from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field, create_custom_fields
 from frappe.permissions import add_permission, update_permission_property
 
 CHEQUE_MANAGER = "Cheque Manager"
@@ -141,6 +141,91 @@ CUSTOM_FIELDS = {
 def create_cheque_fields():
 	create_custom_fields(CUSTOM_FIELDS, ignore_validate=True)
 	create_cheque_permissions()
+
+
+def create_cheque_accounting_dimension_fields():
+	"""Create and normalize fields for dimensions that predate this app.
+
+	ERPNext's dimension hook creates future fields. This companion handles the
+	fresh-install and upgrade cases and makes the tracker fields visibly read-only
+	because their values belong to the submitted capture Payment Entry.
+	"""
+	dimensions = frappe.get_all(
+		"Accounting Dimension",
+		fields=["fieldname", "label", "document_type"],
+	)
+	for dimension in dimensions:
+		create_custom_field(
+			"MFG Cheque",
+			{
+				"fieldname": dimension.fieldname,
+				"label": dimension.label,
+				"fieldtype": "Link",
+				"options": dimension.document_type,
+				"insert_after": "accounting_dimensions_section",
+				"read_only": 1,
+			},
+			ignore_validate=True,
+		)
+		_normalize_cheque_dimension_field(
+			dimension.fieldname, label=dimension.label, options=dimension.document_type
+		)
+
+	frappe.clear_cache(doctype="MFG Cheque")
+
+
+def queue_cheque_accounting_dimension_sync(doc, method=None):
+	"""Sync after commit so schema DDL cannot commit an Accounting Dimension save."""
+	if frappe.flags.in_test:
+		sync_cheque_accounting_dimension(doc.name)
+		return
+	frappe.enqueue(
+		sync_cheque_accounting_dimension,
+		dimension=doc.name,
+		queue="long",
+		enqueue_after_commit=True,
+	)
+
+
+def sync_cheque_accounting_dimension(dimension):
+	"""Create or normalize one newly configured tracker dimension field."""
+	doc = frappe.get_doc("Accounting Dimension", dimension)
+	create_custom_field(
+		"MFG Cheque",
+		{
+			"fieldname": doc.fieldname,
+			"label": doc.label,
+			"fieldtype": "Link",
+			"options": doc.document_type,
+			"insert_after": "accounting_dimensions_section",
+			"read_only": 1,
+		},
+		ignore_validate=True,
+	)
+	_normalize_cheque_dimension_field(
+		doc.fieldname, label=doc.label, options=doc.document_type
+	)
+	frappe.clear_cache(doctype="MFG Cheque")
+
+
+def _normalize_cheque_dimension_field(fieldname, label, options):
+	name = frappe.db.get_value("Custom Field", {"dt": "MFG Cheque", "fieldname": fieldname})
+	if not name:
+		return
+	field = frappe.get_doc("Custom Field", name)
+	changed = False
+	for property_name, value in {
+		"label": label,
+		"options": options,
+		"insert_after": "accounting_dimensions_section",
+		"read_only": 1,
+	}.items():
+		if field.get(property_name) != value:
+			field.set(property_name, value)
+			changed = True
+	if changed:
+		field.flags.ignore_validate = True
+		field.save()
 
 
 def create_cheque_role():

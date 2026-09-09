@@ -229,8 +229,54 @@ def dimension_fieldnames():
 def _dimensions(cheque):
 	meta = frappe.get_meta(CHEQUE)
 	values = {f: cheque.get(f) for f in dimension_fieldnames() if meta.has_field(f) and cheque.get(f)}
-	values.setdefault("cost_center", get_company_settings(cheque.company).cost_center)
 	return {k: v for k, v in values.items() if v}
+
+
+def _quick_entry_dimensions(company):
+	"""Dimension fields that can safely travel from the SPA to a cheque.
+
+	The two documents deliberately need the same field: Payment Entry uses it
+	for the capture GL, while MFG Cheque carries it through every later lifecycle
+	entry.  Ignoring a dimension not present on either document avoids accepting
+	stale browser payloads while an Accounting Dimension is being configured.
+	"""
+	pe_meta = frappe.get_meta("Payment Entry")
+	cheque_meta = frappe.get_meta(CHEQUE)
+	fieldnames = dimension_fieldnames()
+	defaults = {}
+	try:
+		from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import get_dimensions
+
+		_dimension_defs, defaults_by_company = get_dimensions(with_cost_center_and_project=True)
+		defaults = defaults_by_company.get(company, {})
+	except Exception:  # noqa: BLE001 - optional dimension defaults must not block capture
+		frappe.log_error(
+			title="MFG Cheque: accounting dimension defaults lookup failed",
+			message=frappe.get_traceback(),
+		)
+
+	settings = get_company_settings(company)
+	result = []
+	for fieldname in fieldnames:
+		pe_df = pe_meta.get_field(fieldname)
+		cheque_df = cheque_meta.get_field(fieldname)
+		if not pe_df or not cheque_df or pe_df.fieldtype != "Link":
+			continue
+		default = defaults.get(fieldname)
+		if fieldname == "cost_center":
+			default = default or settings.cost_center
+		result.append(
+			{
+				"fieldname": fieldname,
+				"label": pe_df.label,
+				"options": pe_df.options,
+				"default": default,
+				"filters": (
+					{"company": company} if frappe.get_meta(pe_df.options).has_field("company") else {}
+				),
+			}
+		)
+	return result
 
 
 # ------------------------------------------------------------ journal entries
@@ -1210,6 +1256,7 @@ def get_quick_entry(company=None):
 		"currency": _company_currency(company) if company else None,
 		"precision": frappe.get_precision(CHEQUE, "amount"),
 		"today": nowdate(),
+		"dimensions": _quick_entry_dimensions(company) if company else [],
 	}
 
 
@@ -1287,6 +1334,15 @@ def create_cheque_capture(payload):
 	pe.custom_mfg_cheque_type = ct.name
 	pe.custom_mfg_drawee_bank = data.get("drawee_bank")
 	pe.custom_mfg_bank_account = data.get("bank_account")
+
+	# The source Payment Entry must receive the dimensions as well as the MFG
+	# Cheque created from it.  Its controller validates the Link values and GL
+	# dimension rules at submit time; only configured shared fields are accepted.
+	for dimension in _quick_entry_dimensions(data["company"]):
+		fieldname = dimension["fieldname"]
+		value = data[fieldname] if fieldname in data else dimension.get("default")
+		if value:
+			pe.set(fieldname, value)
 
 	if ct.direction == INBOUND:
 		pe.paid_from = party_account

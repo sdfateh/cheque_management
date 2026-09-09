@@ -4,8 +4,24 @@ import frappe
 
 from cheque_management.i18n import _
 
-SEARCHABLE_DOCTYPES = {"Customer", "Supplier"}
+BASE_SEARCHABLE_DOCTYPES = {"Customer", "Supplier", "Cost Center", "Project"}
 MAX_SEARCH_LIMIT = 50
+
+
+def _searchable_doctypes():
+	"""Link targets intentionally exposed by the cheque SPA.
+
+	Accounting Dimensions are administrator-configured DocTypes, so a static
+	allow-list would make every custom dimension field impossible to use. The
+	underlying Frappe search still applies the target DocType's read permissions.
+	"""
+	from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+		get_accounting_dimensions,
+	)
+
+	doctypes = set(BASE_SEARCHABLE_DOCTYPES)
+	doctypes.update(d.document_type for d in get_accounting_dimensions(as_list=False))
+	return doctypes
 
 
 @frappe.whitelist()
@@ -14,7 +30,7 @@ def search_link(doctype, txt=None, filters=None, limit=15):
 
 	if not frappe.has_permission("MFG Cheque", "read"):
 		frappe.throw(_("You do not have permission to manage cheques."), frappe.PermissionError)
-	if doctype not in SEARCHABLE_DOCTYPES:
+	if doctype not in _searchable_doctypes():
 		frappe.throw(_("Link search is not available for {0}.").format(doctype), frappe.PermissionError)
 	if isinstance(filters, str):
 		try:

@@ -95,12 +95,23 @@ class MFGCheque(Document):
 			)
 
 	def validate_locked_fields(self):
-		if self.is_new() or not self.has_downstream_entries:
+		if self.is_new():
 			return
 		before = self.get_doc_before_save()
 		if not before:
 			return
-		for fieldname in LOCKED_AFTER_DOWNSTREAM:
+
+		# The capture Payment Entry is already submitted when this tracker is
+		# created. Changing a dimension here would make that GL disagree with every
+		# later lifecycle entry, so dimensions are immutable from capture onward.
+		from cheque_management.cheque_operations import dimension_fieldnames
+
+		locked_fields = set(dimension_fieldnames())
+		if self.has_downstream_entries:
+			locked_fields.update(LOCKED_AFTER_DOWNSTREAM)
+		for fieldname in locked_fields:
+			if not self.meta.has_field(fieldname):
+				continue
 			if self.get(fieldname) != before.get(fieldname):
 				frappe.throw(
 					_("{0} cannot change once this cheque has entries posted against it.").format(

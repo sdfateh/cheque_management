@@ -54,6 +54,9 @@ before_install = "cheque_management.install.before_install"
 after_install = "cheque_management.install.after_install"
 
 doc_events = {
+	"Accounting Dimension": {
+		"on_update": "cheque_management.cheque_fields.queue_cheque_accounting_dimension_sync",
+	},
 	"Payment Entry": {
 		"validate": "cheque_management.cheque_events.validate",
 		"before_submit": "cheque_management.cheque_events.before_submit",
@@ -61,6 +64,11 @@ doc_events = {
 		"on_cancel": "cheque_management.cheque_events.on_cancel",
 	},
 }
+
+# Include the operational cheque record in ERPNext's accounting-dimension
+# lifecycle.  When an administrator adds a dimension, ERPNext creates the
+# matching Link field here as it does on Payment Entry and Journal Entry.
+accounting_dimension_doctypes = ["MFG Cheque"]
 
 scheduler_events = {
 	"daily": [

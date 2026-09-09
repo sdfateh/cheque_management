@@ -17,6 +17,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, flt, nowdate
 
+from cheque_management import api as cheque_api
 from cheque_management import cfo_dashboard, reporting
 from cheque_management import cheque_operations as ops
 
@@ -137,6 +138,9 @@ class TestChequeOperations(FrappeTestCase):
 		)
 		cls.creditor = frappe.db.get_value(
 			"Account", {"company": COMPANY, "account_type": "Payable", "is_group": 0}, "name"
+		)
+		cls.cost_center = frappe.db.get_value(
+			"Cost Center", {"company": COMPANY, "is_group": 0}, "name"
 		)
 
 	@classmethod
@@ -274,6 +278,89 @@ class TestChequeOperations(FrappeTestCase):
 		self.assertEqual(doc.status, "Received")
 		self.assertEqual(doc.is_post_dated, 0)
 		self.assertEqual(self.gl("Payment Entry", pe.name)[self.in_hand], (100.0, 0.0))
+
+	def test_quick_entry_exposes_searchable_company_dimensions(self):
+		meta = ops.get_quick_entry(COMPANY)
+		cost_center = next(d for d in meta["dimensions"] if d["fieldname"] == "cost_center")
+		self.assertEqual(cost_center["options"], "Cost Center")
+		self.assertEqual(cost_center["filters"], {"company": COMPANY})
+
+		results = cheque_api.search_link(
+			"Cost Center", txt=self.cost_center, filters={"company": COMPANY}
+		)
+		self.assertIn(self.cost_center, [row["value"] for row in results])
+
+	def test_quick_capture_dimensions_reach_every_accounting_entry(self):
+		out = ops.create_cheque_capture(
+			{
+				"company": COMPANY,
+				"cheque_type": self.inbound_type,
+				"party_type": "Customer",
+				"party": CUSTOMER,
+				"amount": 100,
+				"cheque_number": f"T-DIM-{self.RUN}",
+				"cheque_date": nowdate(),
+				"cost_center": self.cost_center,
+			}
+		)
+		self.assertEqual(
+			frappe.db.get_value("Payment Entry", out["payment_entry"], "cost_center"), self.cost_center
+		)
+		self.assertEqual(
+			frappe.db.get_value(CHEQUE_DT, out["cheque"], "cost_center"), self.cost_center
+		)
+		capture_dimensions = frappe.get_all(
+			"GL Entry",
+			filters={
+				"voucher_type": "Payment Entry",
+				"voucher_no": out["payment_entry"],
+				"is_cancelled": 0,
+			},
+			pluck="cost_center",
+		)
+		self.assertTrue(capture_dimensions)
+		self.assertEqual(set(capture_dimensions), {self.cost_center})
+
+		deposit = ops.deposit(out["cheque"])
+		deposit_dimensions = frappe.get_all(
+			"GL Entry",
+			filters={
+				"voucher_type": "Journal Entry",
+				"voucher_no": deposit["journal_entry"],
+				"is_cancelled": 0,
+			},
+			pluck="cost_center",
+		)
+		self.assertTrue(deposit_dimensions)
+		self.assertEqual(set(deposit_dimensions), {self.cost_center})
+
+	def test_quick_capture_can_clear_an_optional_dimension_default(self):
+		settings = frappe.get_single("MFG Cheque Settings")
+		row = next(r for r in settings.company_settings if r.company == COMPANY)
+		row.cost_center = self.cost_center
+		settings.save()
+
+		out = ops.create_cheque_capture(
+			{
+				"company": COMPANY,
+				"cheque_type": self.inbound_type,
+				"party_type": "Customer",
+				"party": CUSTOMER,
+				"amount": 100,
+				"cheque_number": f"T-NO-DIM-{self.RUN}",
+				"cheque_date": nowdate(),
+				"cost_center": "",
+			}
+		)
+		self.assertFalse(frappe.db.get_value("Payment Entry", out["payment_entry"], "cost_center"))
+		self.assertFalse(frappe.db.get_value(CHEQUE_DT, out["cheque"], "cost_center"))
+
+	def test_captured_dimensions_are_immutable(self):
+		_pe, cheque = self.capture("T-DIM-LOCK")
+		doc = frappe.get_doc(CHEQUE_DT, cheque)
+		doc.cost_center = self.cost_center
+		with self.assertRaises(frappe.ValidationError):
+			doc.save()
 
 	def test_deposit_does_not_touch_the_bank(self):
 		"""The whole point of the three-account model.

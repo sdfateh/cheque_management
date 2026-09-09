@@ -62,9 +62,9 @@
   "column_break_45",
   "replaces",
   "replaced_by",
-  "dimensions_section",
+  "accounting_dimensions_section",
   "cost_center",
-  "column_break_50",
+  "dimension_col_break",
   "project",
   "control_section",
   "has_downstream_entries"
@@ -457,7 +457,7 @@
   {
    "collapsible": 1,
    "description": "Carried onto every Journal Entry and Payment Entry this cheque generates.",
-   "fieldname": "dimensions_section",
+   "fieldname": "accounting_dimensions_section",
    "fieldtype": "Section Break",
    "label": "Accounting Dimensions"
   },
@@ -465,17 +465,19 @@
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "read_only": 1
   },
   {
-   "fieldname": "column_break_50",
+   "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "read_only": 1
   },
   {
    "collapsible": 1,
